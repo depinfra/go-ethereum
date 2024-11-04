@@ -333,8 +333,8 @@ func (beacon *Beacon) verifyHeaders(chain consensus.ChainHeaderReader, headers [
 func accumulateRewards(stateDB *state.StateDB, header *types.Header) {
 
 	initialReward := 20.0
-	halvingInterval := 648000
-	blockReward := header.Number
+	halvingInterval := big.NewInt(648000)
+	blockHeight := header.Number
 
 	halvings := blockHeight / halvingInterval
 
