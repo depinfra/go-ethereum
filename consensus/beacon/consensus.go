@@ -330,7 +330,18 @@ func (beacon *Beacon) verifyHeaders(chain consensus.ChainHeaderReader, headers [
 	}()
 	return abort, results
 }
+func accumulateRewards(stateDB *state.StateDB, header *types.Header) {
 
+	initialReward := 20.0
+	halvingInterval := 648000
+
+	halvings := blockHeight / halvingInterval
+
+	blockReward := initialReward / math.Pow(2, float64(halvings))
+
+	reward := new(uint256.Int).Set(blockReward)
+	stateDB.AddBalance(header.Coinbase, reward, tracing.BalanceIncreaseRewardMineBlock)
+}
 // Prepare implements consensus.Engine, initializing the difficulty field of a
 // header to conform to the beacon protocol. The changes are done inline.
 func (beacon *Beacon) Prepare(chain consensus.ChainHeaderReader, header *types.Header) error {
@@ -359,7 +370,8 @@ func (beacon *Beacon) Finalize(chain consensus.ChainHeaderReader, header *types.
 		amount = amount.Mul(amount, uint256.NewInt(params.GWei))
 		state.AddBalance(w.Address, amount, tracing.BalanceIncreaseWithdrawal)
 	}
-	// No block reward which is issued by consensus layer instead.
+	// block reward 
+	accumulateRewards(state, header)
 }
 
 // FinalizeAndAssemble implements consensus.Engine, setting the final state and
