@@ -334,6 +334,7 @@ func accumulateRewards(stateDB *state.StateDB, header *types.Header) {
 
 	initialReward := 20.0
 	halvingInterval := 648000
+	blockHeight := header.Number
 
 	halvings := blockHeight / halvingInterval
 
