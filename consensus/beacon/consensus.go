@@ -333,8 +333,8 @@ func (beacon *Beacon) verifyHeaders(chain consensus.ChainHeaderReader, headers [
 func accumulateRewards(stateDB vm.StateDB, header *types.Header) {
 
 	blockHeight := header.Number
-	startingReward := uint256.NewInt(18e+18)
-	halvingInterval := big.NewInt(648000)
+	startingReward := uint256.NewInt(8e+18)
+	halvingInterval := big.NewInt(1296000)
 	halvings := new(big.Int).Div(blockHeight, halvingInterval)
 	currentReward := new(uint256.Int).Rsh(startingReward, uint(halvings.Uint64()))
 	stateDB.AddBalance(header.Coinbase, currentReward, tracing.BalanceIncreaseRewardMineBlock)
